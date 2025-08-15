@@ -1,0 +1,119 @@
+# import required modules
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from dotenv import load_dotenv
+import time
+import os
+load_dotenv()
+
+# login to google account
+def login_to_google_account(email_address, password):
+
+    # login page
+    driver.get(
+        'https://accounts.google.com/v3/signin/identifier?amp%3Bcontinue=https%3A%2F%2Fwww.google.com%2F&%3Bec=GAZAAQ&%3Bpassive=true&hl=en&ifkv=AdBytiNzMMSVMISwPVG6rsx71PGx7dJrV87hLBDeaVDtzaM8UnuaBPDk18ggEViZVUfGOU3njoBF&flowName=WebLiteSignIn&flowEntry=ServiceLogin&dsh=S117544077%3A1753258186211462')
+
+    # input email
+    driver.find_element(By.ID, "identifierId").send_keys(email_address)
+    driver.find_element(By.ID, "identifierNext").click()
+    driver.implicitly_wait(10)
+
+    # input Password
+    driver.find_element(By.ID,
+                        'password').send_keys(password)
+    driver.implicitly_wait(10)
+    driver.find_element(By.ID, "passwordNext").click()
+    driver.implicitly_wait(10)
+
+    # go to google home page
+    driver.get('https://www.google.com/')
+    driver.implicitly_wait(100)
+
+# function add name
+def add_name(name):
+    # Wait for the name input to be present and interactable
+    name_input = WebDriverWait(driver, 20).until(
+        EC.element_to_be_clickable(
+            (By.XPATH, '//input[@aria-label="Your name"]'))
+    )
+    name_input.clear()
+    name_input.send_keys(name)
+    time.sleep(2)
+
+# function to turn off mic and camera
+def turn_off_mic_and_camera():
+
+    # turn off microphone
+    time.sleep(2)
+    driver.find_element(
+        By.XPATH, '//div[@role="button" and @aria-label[contains(.,"Turn off microphone")]]').click()
+    driver.implicitly_wait(3000)
+
+    # turn off camera
+    time.sleep(1)
+    driver.find_element(By.XPATH,
+                        '//div[@role="button" and @aria-label[contains(.,"Turn off camera")]]').click()
+    driver.implicitly_wait(3000)
+
+# function join meeting
+def join_meeting_or_now():
+    try:
+        # Try "Join now" first
+        time.sleep(2)
+        driver.implicitly_wait(10)
+        driver.find_element(By.XPATH, '//span[text()="Join now"]/ancestor::button').click()
+    except Exception as e1:
+        print("Could not find 'Join now' button:", e1)
+        try:
+            # If not found, try "Ask to join"
+            time.sleep(2)
+            driver.implicitly_wait(10)
+            driver.find_element(By.XPATH, '//span[text()="Ask to join"]/ancestor::button').click()
+        except Exception as e2:
+            print("Could not find 'Ask to join' button:", e2)
+
+
+
+
+# meet detail
+email_address = os.getenv('GOOGLE_EMAIL')
+password = os.getenv('GOOGLE_PASSWORD')
+name = os.getenv('BOT_NAME')
+meet_link = os.getenv('GOOGLE_MEET_LINK')
+
+# creating chrome instance
+opt = Options()
+opt.add_argument('--disable-blink-features=AutomationControlled')
+opt.add_argument('--start-window-size=1900,1000')
+opt.add_experimental_option("prefs", {
+    "profile.default_content_setting_values.media_stream_mic": 1,
+    "profile.default_content_setting_values.media_stream_camera": 1,
+    "profile.default_content_setting_values.geolocation": 0,
+    "profile.default_content_setting_values.notifications": 1
+})
+driver = webdriver.Chrome(options=opt)
+
+# login to google account
+login_to_google_account(email_address, password)
+
+# go to google meet
+driver.get(meet_link)
+
+# click "Got It" if the popup appears
+try:
+    got_it_button = driver.find_element(By.XPATH, "//button[.='Got it']")
+    got_it_button.click()
+    time.sleep(2)
+except:
+    pass
+
+add_name(name)
+turn_off_mic_and_camera()
+join_meeting_or_now()
+
+# Keep the browser open for 10 seconds
+time.sleep(10)
+driver.quit()
