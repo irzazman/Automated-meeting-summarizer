@@ -40,6 +40,6 @@ A simple Selenium-based bot to automate joining Google Meet meetings.
 - This bot uses Selenium and requires [ChromeDriver](https://chromedriver.chromium.org/downloads) installed and available in your PATH.
 - For educational and personal use only.
 
-## License
+## Demo
 
-MIT License
+![Google Meet Bot Demo](demo.gif)
