@@ -42,4 +42,4 @@ A simple Selenium-based bot to automate joining Google Meet meetings.
 
 ## Demo
 
-![Google Meet Bot Demo](demo.gif)
+<video src="demo.mp4" controls width="600"></video>
