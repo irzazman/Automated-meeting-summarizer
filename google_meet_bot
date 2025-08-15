@@ -87,7 +87,7 @@ meet_link = os.getenv('GOOGLE_MEET_LINK')
 # creating chrome instance
 opt = Options()
 opt.add_argument('--disable-blink-features=AutomationControlled')
-opt.add_argument('--start-window-size=1900,1000')
+opt.add_argument('--start-maximized')
 opt.add_experimental_option("prefs", {
     "profile.default_content_setting_values.media_stream_mic": 1,
     "profile.default_content_setting_values.media_stream_camera": 1,
