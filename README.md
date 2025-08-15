@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # Google Meet Bot
 
 A simple Selenium-based bot to automate joining Google Meet meetings.
